@@ -1,13 +1,27 @@
-# Invoice Project
+function splitPDF() {
 
-## Description
-This project is used for tracking invoice data.
+  var fileId = "YOUR_FILE_ID";
 
-## Features
-- Invoice tracking
-- Pending calculation
-- Data analysis
-- compile shet.
+  var file = DriveApp.getFileById(fileId);
 
-## Author
-Amit
+  var blob = file.getBlob();
+
+  var response = UrlFetchApp.fetch(
+    "YOUR_RENDER_URL/split",
+    {
+      method: "post",
+      payload: {
+        file: blob
+      },
+      muteHttpExceptions: true
+    }
+  );
+
+  var zipBlob = response.getBlob();
+
+  zipBlob.setName("split_files.zip");
+
+  DriveApp.createFile(zipBlob);
+
+  Logger.log("PDF Split Success");
+}
